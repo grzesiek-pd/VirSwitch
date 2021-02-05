@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}VMachines{% endblock %}
+{% block content %}
+    {% if v_list %}
+        <form action="{{ url_for('vmachines') }}" method="post">
+            <div>
+                <p><button type="submit" class="btn btn-warning btn-block">REFRESH</button></p>
+            </div>
+        </form>
+
+    <div class="card">
+        <div class="card-header">
+            <strong class="card-title">Virtual Machines:</strong>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>NAME:</th>
+                        <th>STATUS:</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for line in v_list %}
+
+                        <tr>
+                            <td><h5>{{ line[0] }}</h5></td>
+                            <td width="8%"><h5>{{ line[1] }}</h5></td>
+                            <td width="15%">
+
+                            </td>
+                            <form action="{{ url_for('restart_vm',vm=line[0]) }}" method="POST">
+                                <td width="7%"><input class="button btn-info btn-sm btn-block" type="submit" value="RESTART"></td>
+                            </form>
+                            <form action="{{ url_for('start_vm',vm=line[0]) }}" method="POST">
+                                <td width="7%"><input class="button btn-success btn-sm btn-block" type="submit" value="START"></td>
+                            </form>
+                            <form action="{{ url_for('stop_vm',vm=line[0]) }}" method="POST">
+                                <td width="7%"><input class="button btn-dark btn-sm btn-block" type="submit" value="STOP"></td>
+                            </form>
+                            <form action="{{ url_for('kill_vm',vm=line[0]) }}" method="POST">
+                                <td width="7%"><input class="button btn-danger btn-sm btn-block" type="submit" value="FORCE STOP"></td>
+                            </form>
+                        </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <form action="{{ url_for('vmachines') }}" method="post">
+            <div>
+                <p><button type="submit" class="btn btn-primary btn-block">GET LIST VMACHINES</button></p>
+            </div>
+        </form>
+{% endif %}
+{% endblock %}

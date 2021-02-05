@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>VirSwitch</title>
+  <meta charset="utf-8">
+{#  <meta name="viewport" content="width=device-width, initial-scale=1">#}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{#  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body class="bg-dark">
+    <div class="container w-25" style="text-align: center">
+        <div>
+            <p></p>
+        </div>
+        <div>
+            <h2 class="text-white">
+                <span class="spinner-grow spinner-grow"></span>
+                VirSwitch
+            </h2>
+        </div>
+        <div>
+            <button  type="button" class="btn btn-success w-25" data-toggle="modal" data-target="#log_in">
+                LOGIN
+            </button>
+        </div>
+    </div>
+    <div class="modal fade" id="log_in">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div><p> </p></div>
+                <div class="text-center">
+                    <img src="{{ url_for('static', filename='images/logoWSIZ.png') }}" alt="Logo">
+                </div>
+                <div class="modal-body" align="center">
+                  Please enter login and password
+                </div>
+                <div align="center">
+                    <form action="#" method="post">
+                        <div>
+                            <p><input type="text" class="form-control m1 w-auto" name="login_" placeholder="login" autocomplete="off" required/>
+                            </p></div>
+                        <div>
+                            <p>
+                                <input type="password" class="form-control w-75" name="pass_" placeholder="password" required/></p>
+                        </div>
+                        <div>
+                            <p><input type="submit" class="btn btn-success w-50" value="LOGIN"/></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
