@@ -146,7 +146,6 @@ def login():
 
 @app.route('/users', methods=["POST", "GET"])
 def users():
-    # if request.method == "POST":
     msg_id = "get_user_list"
     msg = [msg_id, '', '', '']
     u_list = comm.msg(msg)
@@ -157,7 +156,6 @@ def users():
     # print(type(msg_back))
     vms_list = comm.admin_check(admin, msg_back, vms)
     return render_template('users.html', u_list=u_list, v_list=vms_list)
-    # return render_template('users.html')
 
 
 @app.route('/add_user', methods=["POST", "GET"])

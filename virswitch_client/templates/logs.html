@@ -5,9 +5,9 @@
         {% if logs %}
             <form action="{{ url_for('reset_logs') }}">
                 <div>
-                    <p>
+
                         <button type="submit" class="button btn btn-warning m-1">RESET LOGS</button>
-                    </p>
+
                 </div>
             </form>
             <div class="card">
@@ -20,9 +20,9 @@
         {% else %}
             <form action="{{ url_for('logs') }}" method="post">
                 <div>
-                    <p>
+
                         <button type="submit" class="btn btn-primary m-1">GET LOGS</button>
-                    </p>
+
                 </div>
             </form>
         {% endif %}
