@@ -10,14 +10,14 @@ def msg(msg_to_send):
     client_socket = sock.socket(sock.AF_INET, sock.SOCK_STREAM)
     client_socket.connect((host, port))
 
-    print(msg_to_send)
+    # print(msg_to_send)
     b_msg = pickle.dumps(msg_to_send)
-    print(b_msg)
+    # print(b_msg)
     client_socket.send(b_msg)
 
     msg_get_back = pickle.loads(client_socket.recv(32767))
 
-    print("msg_get_back=", msg_get_back, type(msg_get_back))
+    # print("msg_get_back=", msg_get_back, type(msg_get_back))
     return msg_get_back
 
 

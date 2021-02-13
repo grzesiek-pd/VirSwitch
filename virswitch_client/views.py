@@ -16,11 +16,11 @@ def index():
 def start_vm():
     if request.method == "POST":
         vm = request.args.get('vm')
-        print(vm)
+        # print(vm)
         msg_id = "start"
         msg = [msg_id, active_u, vm, '']
         msg_back = comm.msg(msg)
-        print(type(msg_back))
+        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -30,11 +30,11 @@ def start_vm():
 def stop_vm():
     if request.method == "POST":
         vm = request.args.get('vm')
-        print(vm)
+        # print(vm)
         msg_id = "stop"
         msg = [msg_id, active_u, vm, '']
         msg_back = comm.msg(msg)
-        print(type(msg_back))
+        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -44,11 +44,11 @@ def stop_vm():
 def restart_vm():
     if request.method == "POST":
         vm = request.args.get('vm')
-        print(vm)
+        # print(vm)
         msg_id = "restart"
         msg = [msg_id, active_u, vm, '']
         msg_back = comm.msg(msg)
-        print(type(msg_back))
+        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -58,11 +58,11 @@ def restart_vm():
 def kill_vm():
     if request.method == "POST":
         vm = request.args.get('vm')
-        print(vm)
+        # print(vm)
         msg_id = "kill"
         msg = [msg_id, active_u, vm, '']
         msg_back = comm.msg(msg)
-        print(type(msg_back))
+        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -75,9 +75,9 @@ def change_memory():
         new_memory = request.form.get("new_memory")
         msg_id = "new_memory"
         msg = [msg_id, active_u, vm, new_memory]
-        print(msg)
+        # print(msg)
         msg_back = comm.msg(msg)
-        print(type(msg_back))
+        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -90,9 +90,9 @@ def change_max_memory():
         new_max_memory = request.form.get("new_max_memory")
         msg_id = "new_max_memory"
         msg = [msg_id, active_u, vm, new_max_memory]
-        print(msg)
+        # print(msg)
         msg_back = comm.msg(msg)
-        print(type(msg_back))
+        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -108,7 +108,7 @@ def vmachines():
     msg_id = "v_list"
     msg = [msg_id, active_u, '', '']
     msg_back = comm.msg(msg)
-    print(type(msg_back))
+    # print(type(msg_back))
     vms_list = comm.admin_check(admin, msg_back, vms)
     return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
 
@@ -126,7 +126,7 @@ def login():
         password = hashlib.md5(pas.encode()).hexdigest()
         msg = [msg_id, log, pas, password]
         msg_back = comm.msg(msg)
-        print(msg_back)
+        # print(msg_back)
         if msg_back[0] == 'password_ok':
             active_u = msg_back[1]
             if msg_back[3] == 'yes':
@@ -134,8 +134,8 @@ def login():
             else:
                 admin = False
             vms = msg_back[4].split(',')
-            print(msg_back)
-            print(active_u, admin, vms)
+            # print(msg_back)
+            # print(active_u, admin, vms)
 
             return redirect(url_for('vmachines'))
         elif comm.msg(msg)[0] == 'password_wrong':
@@ -154,7 +154,7 @@ def users():
     msg_id = "v_list"
     msg = [msg_id, active_u, '', '']
     msg_back = comm.msg(msg)
-    print(type(msg_back))
+    # print(type(msg_back))
     vms_list = comm.admin_check(admin, msg_back, vms)
     return render_template('users.html', u_list=u_list, v_list=vms_list)
     # return render_template('users.html')
@@ -171,12 +171,12 @@ def add_user():
         is_admin = request.form.get("is_admin")
         msg_id = "add_user"
         msg = [msg_id, login, [password, is_admin, vms], '']
-        print(msg)
+        # print(msg)
         u_list = comm.msg(msg)
         msg_id = "v_list"
         msg = [msg_id, active_u, '', '']
         msg_back = comm.msg(msg)
-        print(type(msg_back))
+        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         return render_template('users.html', u_list=u_list, v_list=vms_list)
 
@@ -187,12 +187,12 @@ def delete_user():
         login = request.form.get('login_confirm')
         msg_id = "delete_user"
         msg = [msg_id, login, '', '']
-        print(msg)
+        # print(msg)
         u_list = comm.msg(msg)
         msg_id = "v_list"
         msg = [msg_id, active_u, '', '']
         msg_back = comm.msg(msg)
-        print(type(msg_back))
+        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         return render_template('users.html', u_list=u_list, v_list=vms_list)
 
@@ -203,7 +203,7 @@ def logs():
     msg_id = "get_logs"
     msg = [msg_id, '', '', '']
     msg_back = comm.msg(msg)
-    print(type(msg_back))
+    # print(type(msg_back))
     logs = msg_back
     return render_template('logs.html', logs=logs)
 
@@ -213,7 +213,7 @@ def reset_logs():
     msg_id = "reset_logs"
     msg = [msg_id, active_u, '', '']
     msg_back = comm.msg(msg)
-    print(type(msg_back))
+    # print(type(msg_back))
     logs = msg_back
     return render_template('logs.html', logs=logs)
 
