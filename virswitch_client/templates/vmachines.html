@@ -1,108 +1,288 @@
 {% extends "base.html" %}
-{% block title %}VMachines{% endblock %}
+{% block title %}VirSwitch{% endblock %}
 {% block content %}
-    {% if v_list %}
-        <meta http-equiv="refresh" content="10; url={{ (url_for('vmachines')) }}" />
-        <form action="{{ url_for('vmachines') }}" method="post">
-            <div>
-                <p><button type="submit" class="btn btn-warning btn-block">REFRESH</button></p>
-            </div>
-        </form>
-
-    <div class="card">
-        <div class="card-header">
-            <table style="width: 100%">
-                <thead>
-                    <tr style="font-weight: bolder;font-size: x-large">
-                        <td style="width: 20%">user:&nbsp; {{ active_u }}</td>
-                        <td style="width: 18%">SERVER MEMORY(MB):</td>
-                        <td>TOTAL:&nbsp; {{ host_info[1] }}</td>
-                        <td>USED:&nbsp; {{ host_info[2] }}</td>
-                        <td>FREE:&nbsp; {{ host_info[3] }}</td>
-                        <td>CACHE:&nbsp; {{ host_info[4] }}</td>
-                        <td>AVAILABLE:&nbsp; {{ host_info[5] }}</td>
-
-                    </tr>
-                </thead>
-            </table>
-
-        </div>
-        <div class="card-body">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>VIRTUAL MACHINES:</th>
-                        <th>STATUS:</th>
-                        <th>CPU:</th>
-                        <th>MAX MEMORY (MB):</th>
-                        <th>CHANGE MAX MEMORY (only for off machines)</th>
-                        <th>USED MEMORY (MB):</th>
-                        <th>CHANGE USED MEMORY (need reboot)</th>
-                        <th></th>
-
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for line in v_list %}
-                    {% if line[1] == "running" %}
-                        <tr style="background-color: #ccffcc">
-                    {% else %}
-                        <tr>
-                    {% endif %}
-                            <td><h5>{{ line[0] }}</h5></td>
-
-                            <td style="width: 5%"><h5>{{ line[1] }}</h5></td>
-                            <td style="width: 5%"><h5>{{ line[2] }}</h5></td>
-                            <td style="width: 10%"><h5>{{ line[3] }}</h5></td>
-                            <td style="width: 15%">
-                                <form action="{{ url_for('change_max_memory', vm=line[0]) }}" method="POST">
-                                    <input class="button btn-warning btn-sm" type="submit" value="CHANGE">
-                                    <select name="new_max_memory" class="form-select" aria-label="Example select with button addon" required>
-                                        <option selected ></option>
-                                        {% for i in range(512,8195,512) %}
-                                        <option value={{ i }}>{{ i }} MB</option>
-                                        {% endfor %}
-                                    </select>
+    {% if admin %}
+        {% if v_list %}
+            <meta http-equiv="refresh" content="15; url={{ (url_for('vmachines')) }}" />
+            <div class="card" style="opacity: 95%">
+            <div class="card-header">
+                <table style="width: 100%">
+                    <thead>
+                        <tr style="font-weight: bolder;font-size: large">
+                            <td style="width: 10%">
+                                <form action="{{ url_for('vmachines') }}" method="post">
+                                    <div>
+                                        <button type="submit" class="btn btn-warning">REFRESH</button>
+                                    </div>
                                 </form>
                             </td>
-                            <td style="width: 10%"><h5>{{ line[4] }}</h5></td>
-                            <td style="width: 15%">
-                                <form action="{{ url_for('change_memory', vm=line[0]) }}" method="POST">
-                                    <input class="button btn-info btn-sm" type="submit" value="CHANGE">
-                                    <select name="new_memory" class="form-select" aria-label="Example select with button addon" required>
-                                        <option selected ></option>
-                                        {% for i in range(512,line[3]+1,512) %}
-                                        <option value={{ i }}>{{ i }} MB</option>
-                                        {% endfor %}
-                                    </select>
-                                </form>
-                            </td>
-                            <form action="{{ url_for('restart_vm',vm=line[0]) }}" method="POST">
-                                <td style="width: 7%"><input class="button btn-info btn-sm btn-block" type="submit" value="REBOOT"></td>
-                            </form>
-                            <form action="{{ url_for('start_vm',vm=line[0]) }}" method="POST">
-                                <td style="width: 7%"><input class="button btn-success btn-sm btn-block" type="submit" value="START"></td>
-                            </form>
-                            <form action="{{ url_for('stop_vm',vm=line[0]) }}" method="POST">
-                                <td style="width: 7%"><input class="button btn-dark btn-sm btn-block" type="submit" value="STOP"></td>
-                            </form>
-                            <form action="{{ url_for('kill_vm',vm=line[0]) }}" method="POST">
-                                <td style="width: 7%"><input class="button btn-danger btn-sm btn-block" type="submit" value="FORCE STOP"></td>
-                            </form>
+                            <td style="width: 15%">user:&nbsp; {{ active_u }}</td>
+                            <td style="width: 15%">SERVER MEMORY(MB):</td>
+                            <td>TOTAL:&nbsp; {{ host_info[1] }}</td>
+                            <td>USED:&nbsp; {{ host_info[2] }}</td>
+                            <td>FREE:&nbsp; {{ host_info[3] }}</td>
+                            <td>CACHE:&nbsp; {{ host_info[5] }}</td>
+                            <td>AVAILABLE:&nbsp; {{ host_info[6] }}</td>
                         </tr>
-
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-{% else %}
-    <form action="{{ url_for('vmachines') }}" method="post">
-            <div>
-                <p><button type="submit" class="btn btn-primary btn-block">GET LIST VMACHINES</button></p>
+                    </thead>
+                </table>
             </div>
-        </form>
-{% endif %}
+            <div class="card-body">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>VIRTUAL MACHINES:</th>
+                            <th style="width: 20%">
+                                <div class="text-center">
+                                    <table>
+                                        <tr>
+                                            <h6>(ONLY OFFLINE CHANGES)</h6>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 40%">MAX CORES</td>
+                                            <td>MAX MEMORY (MB)</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </th>
+                            <th style="width: 20%">
+                                <div class="text-center">
+                                    <table>
+                                        <tr>
+                                            <h6>(ONLY ONLINE CHANGES)</h6>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 40%">USED CORES</td>
+                                            <td>USED MEMORY (MB)</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for line in v_list %}
+                        {% if line[1] == "running" %}
+                            <tr style="background-color: #ddffdd">
+                        {% else %}
+                            <tr style="background-color: #f7f7f7">
+                        {% endif %}
+                                <td> {# vm machines info #}
+                                    <table>
+                                        <tr>
+                                            <th>{{ line[0] }}</th>
+                                            <th style="width: 10%">{{ line[1] }}</th>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ line[5] }}</td>
+                                            <td>blablabla</td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td style="width: 20%"> {# change  max cores/memory #}
+                                    <table class="text-center w-100">
+                                        <tr>
+                                            <th style="width: 45%"><h3>{{ line[2] }}</h3></th>
+                                            <th style="width: 55%"><h3>{{ line[3] }}</h3></th>
+
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <form action="" method="POST" class="input-group">
+                                                    <select name="new_max_memory" class="form-select form-select-sm" aria-label="Select max memory" required>
+                                                        <option selected ></option>
+                                                        {% for i in range(1,5) %}
+                                                        <option value={{ i }}>{{ i }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <input class="button btn-warning btn-sm" type="submit" value="CHANGE">
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="{{ url_for('change_max_memory', vm=line[0]) }}" method="POST" class="input-group">
+                                                    <select name="new_max_memory" class="form-select form-select-sm" aria-label="Select max memory" required>
+                                                        <option selected ></option>
+                                                        {% for i in range(512,16385,512) %}
+                                                        <option value={{ i }}>{{ i }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <input class="button btn-warning btn-sm" type="submit" value="CHANGE">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td style="width: 20%"> {# change used cores/memory #}
+                                    <table class="text-center w-100">
+                                        <tr>
+                                            <th style="width: 45%"><h3>{{ line[2] }}</h3></th>
+                                            <th style="width: 55%"><h3>{{ line[4] }}</h3></th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <form action="" method="POST" class="input-group">
+                                                    <select name="new_memory" class="form-select form-select-sm" aria-label="Select memory" required>
+                                                        <option selected ></option>
+                                                        {% for i in range(1,5) %}
+                                                        <option value={{ i }}>{{ i }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <input class="button btn-info btn-sm" type="submit" value="CHANGE">
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="{{ url_for('change_memory', vm=line[0]) }}" method="POST" class="input-group">
+                                                    <select name="new_memory" class="form-select form-select-sm" aria-label="Select memory" required>
+                                                        <option selected ></option>
+                                                        {% for i in range(512,line[3]+ 1,512) %}
+                                                        <option value={{ i }}>{{ i }} MB</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <input class="button btn-info btn-sm" type="submit" value="CHANGE">
+                                                </form>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td style="width: 15%"> {# controlers #}
+                                    <table class="tab-content w-100">
+                                        <tr>
+                                            <td style="width: 50%">
+                                                <form action="{{ url_for('start_vm',vm=line[0]) }}" method="POST">
+                                                    <input class="button btn-success btn-sm w-100" type="submit" value="START">
+                                                </form>
+                                            </td>
+                                            <td style="width: 50%">
+                                                <form action="{{ url_for('restart_vm',vm=line[0]) }}" method="POST">
+                                                    <input class="button btn-info btn-sm w-100" type="submit" value="REBOOT">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <form action="{{ url_for('stop_vm',vm=line[0]) }}" method="POST">
+                                                    <input class="button btn-dark btn-sm w-100" type="submit" value="STOP">
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="{{ url_for('kill_vm',vm=line[0]) }}" method="POST">
+                                                    <input class="button btn-danger btn-sm w-100" type="submit" value="FORCE STOP">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                            </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+            <form action="{{ url_for('vmachines') }}" method="post">
+                <div>
+                    <p><button type="submit" class="btn btn-primary btn-block">GET LIST VMACHINES</button></p>
+                </div>
+            </form>
+        {% endif %}
+    {% else %}
+        {% if v_list %}
+            <meta http-equiv="refresh" content="15; url={{ (url_for('vmachines')) }}" />
+            <div class="card" style="opacity: 95%">
+            <div class="card-header">
+                <table style="width: 100%">
+                    <thead>
+                        <tr style="font-weight: bolder;font-size: large">
+                            <td style="width: 10%">
+                                <form action="{{ url_for('vmachines') }}" method="post">
+                                    <div>
+                                        <button type="submit" class="btn btn-warning">REFRESH</button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td style="width: 15%">user:&nbsp; {{ active_u }}</td>
+
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr style="font-size: small">
+                            <th>VIRTUAL MACHINES:</th>
+                            <th>STATUS:</th>
+                            <th>CPU:</th>
+                            <th>MAX MEMORY (MB):</th>
+                            <th>USED MEMORY (MB):</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for line in v_list %}
+                        {% if line[1] == "running" %}
+                            <tr style="background-color: #ddffdd">
+                        {% else %}
+                            <tr>
+                        {% endif %}
+                                <td>
+                                    {{ line[0] }}
+                                </td>
+                                <td style="width: 5%">
+                                    {{ line[1] }}
+                                </td>
+                                <td style="width: 5%">
+                                    {{ line[2] }}
+                                </td>
+                                <td style="width: 10%">
+                                    {{ line[3] }}
+                                </td>
+
+                                <td style="width: 10%">
+                                    {{ line[4] }}
+                                </td>
+
+                                <td style="width: 5%">
+                                    <form action="{{ url_for('restart_vm',vm=line[0]) }}" method="POST">
+                                        <input class="button btn-info btn-sm w-100" type="submit" value="REBOOT">
+                                    </form>
+                                </td>
+                                <td style="width: 5%">
+                                    <form action="{{ url_for('start_vm',vm=line[0]) }}" method="POST">
+                                        <input class="button btn-success btn-sm w-100" type="submit" value="START">
+                                    </form>
+                                </td>
+                                <td style="width: 5%">
+                                    <form action="{{ url_for('stop_vm',vm=line[0]) }}" method="POST">
+                                        <input class="button btn-dark btn-sm w-100" type="submit" value="STOP">
+                                    </form>
+                                </td>
+                                <td style="width: 8%">
+                                    <form action="{{ url_for('kill_vm',vm=line[0]) }}" method="POST">
+                                        <input class="button btn-danger btn-sm w-100" type="submit" value="FORCE STOP">
+                                    </form>
+                                </td>
+                            </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+            <form action="{{ url_for('vmachines') }}" method="post">
+                <div>
+                    <p><button type="submit" class="btn btn-primary btn-block">GET LIST VMACHINES</button></p>
+                </div>
+            </form>
+        {% endif %}
+    {% endif %}
 {% endblock %}

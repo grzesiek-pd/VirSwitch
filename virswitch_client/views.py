@@ -3,6 +3,7 @@ from virswitch_client import app, comm
 import hashlib
 
 active_u = ''
+names = []
 admin = False
 vms = []
 
@@ -149,7 +150,6 @@ def users():
     msg_id = "get_user_list"
     msg = [msg_id, '', '', '']
     u_list = comm.msg(msg)
-
     msg_id = "v_list"
     msg = [msg_id, active_u, '', '']
     msg_back = comm.msg(msg)
@@ -253,5 +253,5 @@ def internal_error(error):
 
 @app.context_processor
 def inject_variables():
-    return dict(active_u=active_u, admin=admin)
+    return dict(active_u=active_u, admin=admin, names=names)
 

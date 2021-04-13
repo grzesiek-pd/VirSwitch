@@ -3,21 +3,21 @@
 {% block content %}
     {% if admin %}
         {% if u_list %}
-<form action="{{ url_for('users') }}" method="post">
-    <div>
-        <p>
-            <input type="submit" class="btn btn-primary m-1" value="GET USER LIST"/>
-            <button  type="button" class="btn btn-success m-1" data-toggle="modal" data-target="#add_user">ADD USER</button>
-        </p>
-    </div>
-</form>
+            <form action="{{ url_for('users') }}" method="post">
+                <div>
 
-            <div class="card">
+
+                        <button  type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#add_user">ADD USER</button>
+
+                </div>
+            </form>
+
+            <div class="card" style="opacity: 95%">
         <div class="card-header">
             <strong class="card-title">USERS:</strong>
         </div>
         <div class="card-body">
-            <table class="table table-striped table-bordered">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>LOGIN:</th>
@@ -31,14 +31,14 @@
                 {% for user in u_list %}
                     <form action="{{ url_for('users') }}" method="POST">
                         {% if user[1] == 'yes' %}
-                        <tr style="background-color: #bbddff">
+                        <tr style="background-color: #ddeeff">
                         {% else %}
                         <tr>
                         {% endif %}
                             <td>{{ user[0] }}</td>
                             <td>{{ user[1] }}</td>
                             <td>{{ user[2] }}</td>
-                            <td width="5%"><button  type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_user">DELETE</button></td>
+                            <td width="5%"><button  type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_user">DELETE</button></td>
 
                         </tr>
                     </form>
@@ -54,7 +54,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">ADD NEW USER</h5>
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div align="center">
                     <form action="{{ url_for('add_user') }}" method="post">
@@ -74,26 +74,25 @@
                             <div class="input-group-prepend">
                                 <label class="input-group-text">Virtual Machines:</label>
                             </div>
-                            <select class="form-select form-select-sm" style="width: 225px" size="3" name="vm_" multiple aria-label="multiple select example" required>
+                            <select class="form-select form-select" style="width: 225px" size="10" name="vm_" multiple aria-label="multiple select example" required>
                               <option selected>all</option>
                                 {% for vm in v_list %}
                                     <option value={{ vm[0] }}>{{ vm[0] }}</option>
                                 {% endfor %}
                             </select>
-
                         </div>
+                        <p style="font-size: small">Ctrl for multiple selection / option "all" work only for admin account </p>
                         <div class="input-group w-75 m-3">
                           <div class="input-group-prepend">
                             <label class="input-group-text">User type</label>
                           </div>
-                          <select class="custom-select" name="is_admin" required>
+                          <select class="form-select" name="is_admin" required>
                             <option selected ></option>
                             <option value="yes">Admin</option>
                             <option value="no">Not Admin</option>
                           </select>
                         </div>
                         <div>
-                            <p style="font-size: small">option "all" work only for admin account</p>
                             <p><input type="submit" class="btn btn-success w-50 m-2" value="ADD"/></p>
                         </div>
                     </form>
@@ -106,7 +105,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">CONFIRM USER LOGIN</h5>
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div align="center">
                     <form action="{{ url_for('delete_user') }}" method="post">

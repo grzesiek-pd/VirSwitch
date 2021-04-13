@@ -28,7 +28,7 @@ body {
 
 .main {
   margin-left: 160px; /* Same as the width of the sidenav */
-  font-size: 18px; /* Increased text to enable scrolling */
+  font-size: 16px; /* Increased text to enable scrolling */
   padding: 0px 6px;
 }
 

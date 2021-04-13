@@ -1,16 +1,14 @@
 {% extends "base.html" %}
-{% block title %}VMachines{% endblock %}
+{% block title %}VirSwitch{% endblock %}
 {% block content %}
     {% if admin %}
         {% if logs %}
             <form action="{{ url_for('reset_logs') }}">
                 <div>
-
-                        <button type="submit" class="button btn btn-warning m-1">RESET LOGS</button>
-
+                    <button type="submit" class="button btn btn-warning m-1">RESET LOGS</button>
                 </div>
             </form>
-            <div class="card">
+            <div class="card" style="opacity: 95%">
                 <div class="card-body">
                     {% for line in logs %}
                         <h6>{{ line }}</h6>
@@ -20,13 +18,11 @@
         {% else %}
             <form action="{{ url_for('logs') }}" method="post">
                 <div>
-
-                        <button type="submit" class="btn btn-primary m-1">GET LOGS</button>
-
+                    <button type="submit" class="btn btn-primary m-1">GET LOGS</button>
                 </div>
             </form>
         {% endif %}
     {% else %}
-    Admin???
-{% endif %}
+    Please contact the administrator.
+    {% endif %}
 {% endblock %}
