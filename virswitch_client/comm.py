@@ -2,6 +2,7 @@ from virswitch_client import app
 import socket as sock
 import pickle
 from cryptography.fernet import Fernet
+from virswitch_client.encrypt import Crypt
 
 
 @app.route('/msg')
@@ -12,24 +13,16 @@ def msg(msg_to_send):
     client_socket = sock.socket(sock.AF_INET, sock.SOCK_STREAM)
     client_socket.connect((host, port))
 
-    b_msg = pickle.dumps(msg_to_send)
-    # print(b_msg)
-
+    pack_to_send = Crypt.encrypt(msg_to_send)
+    client_socket.send(pack_to_send)
     print(f'-------------------')
-    print(f'surowa paczka -> {type(msg_to_send)} {msg_to_send}')
-    binary_msg = str(msg_to_send).encode()
+    print(f'przygotowana paczka -> {type(msg_to_send)}{msg_to_send}')
+    print(f'zakodowana paczka -> {type(pack_to_send)}{pack_to_send}')
 
-    print(f'niekodowana paczka -> {type(binary_msg)} {binary_msg}')
-    encoded_msg = Fernet(key).encrypt(binary_msg)
-
-    print(f'wysłana paczka -> {type(encoded_msg)} {encoded_msg}')
-    client_socket.send(encoded_msg)
-
-    print(f'-------------------')
     msg_back = client_socket.recv(8000)
+    msg_get_back = Crypt.decrypt(msg_back)
+    print(f'-------------------')
     print(f'otrzymana paczka -> {type(msg_back)}{msg_back}')
-
-    msg_get_back = pickle.loads(msg_back)
     print(f'rozkodowana paczka -> {type(msg_get_back)}{msg_get_back}')
 
     if msg_get_back == 'error':
