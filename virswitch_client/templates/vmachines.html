@@ -3,7 +3,7 @@
 {% block content %}
     {% if admin %}
         {% if v_list %}
-            <meta http-equiv="refresh" content="15; url={{ (url_for('vmachines')) }}" />
+            <meta http-equiv="refresh" content="15; url={{ (url_for('vmachines')) }}"/>
             <div class="card" style="opacity: 95%">
             <div class="card-header">
                 <table style="width: 100%">
@@ -75,8 +75,12 @@
                                             <th style="width: 10%">{{ line[1] }}</th>
                                         </tr>
                                         <tr>
-                                            <td>{{ line[5] }}</td>
-                                            <td>blablabla</td>
+                                            <td>ip: {{ line[5] }}</td>
+                                            <td><button  type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#description">Description</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>pass: {{ line[6] }}</td>
+                                            <td><a class="button btn-warning btn-sm" href="{{url_for('users')}}">Users</a></td>
                                         </tr>
                                     </table>
                                 </td>
@@ -184,6 +188,31 @@
                 </table>
             </div>
         </div>
+    <div class="modal fade" id="description">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">CONFIRM USER LOGIN</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div align="center">
+                    <form action="{{ url_for('delete_user') }}" method="post">
+                        <div class="input-group w-75 m-3">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text">login</label>
+                            </div>
+                            <input type="text" class="form-control" name="login_confirm" autocomplete="off" id="validationDefault02" required/>
+                        </div>
+
+                        <div>
+                            <p><input type="submit" class="btn btn-warning w-50 m-2" value="CONFIRM"/></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
         {% else %}
             <form action="{{ url_for('vmachines') }}" method="post">
                 <div>
@@ -277,6 +306,7 @@
                 </table>
             </div>
         </div>
+
         {% else %}
             <form action="{{ url_for('vmachines') }}" method="post">
                 <div>

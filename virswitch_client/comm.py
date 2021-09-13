@@ -13,21 +13,29 @@ def msg(msg_to_send):
     client_socket.connect((host, port))
 
     b_msg = pickle.dumps(msg_to_send)
+    # print(b_msg)
 
+    print(f'-------------------')
+    print(f'surowa paczka -> {type(msg_to_send)} {msg_to_send}')
     binary_msg = str(msg_to_send).encode()
+
+    print(f'niekodowana paczka -> {type(binary_msg)} {binary_msg}')
     encoded_msg = Fernet(key).encrypt(binary_msg)
 
-    # print(b_msg)
-    # print(encoded_msg)
-
+    print(f'wysłana paczka -> {type(encoded_msg)} {encoded_msg}')
     client_socket.send(encoded_msg)
 
-    msg_get_back = pickle.loads(client_socket.recv(8000))
+    print(f'-------------------')
+    msg_back = client_socket.recv(8000)
+    print(f'otrzymana paczka -> {type(msg_back)}{msg_back}')
+
+    msg_get_back = pickle.loads(msg_back)
+    print(f'rozkodowana paczka -> {type(msg_get_back)}{msg_get_back}')
 
     if msg_get_back == 'error':
         print('error!')
 
-    elif msg_get_back in range(100):
+    elif msg_get_back in range(32000):
         parts = msg_get_back
         print('parts =', msg_get_back)
         msg_str = ''
@@ -56,7 +64,7 @@ def msg(msg_to_send):
         print('long msg ->', msg)
         return msg
     else:
-        print('short msg ->', msg_get_back)
+        # print('short msg ->', msg_get_back)
         return msg_get_back
 
 

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}VirSwitch{% endblock %}
+{% block content %}
+    {% if admin %}
+        {% if u_list %}
+            <form action="{{ url_for('users') }}" method="post">
+                <div>
+
+
+                        <button  type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#add_user">ADD USER</button>
+
+                </div>
+            </form>
+
+            <div class="card" style="opacity: 95%">
+        <div class="card-header">
+            <strong class="card-title">USERS:</strong>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>LOGIN:</th>
+                        <th>ADMIN:</th>
+                        <th>VMACHINES:</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for user in u_list %}
+                    <form action="{{ url_for('users') }}" method="POST">
+                        {% if user[1] == 'yes' %}
+                        <tr style="background-color: #ddeeff">
+                        {% else %}
+                        <tr>
+                        {% endif %}
+                            <td>{{ user[0] }}</td>
+                            <td>{{ user[1] }}</td>
+                            <td>{{ user[2] }}</td>
+                            <td width="5%"><button  type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_user">DELETE</button></td>
+
+                        </tr>
+                    </form>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+<div class="modal fade" id="add_user">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">ADD NEW USER</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div align="center">
+                    <form action="{{ url_for('add_user') }}" method="post">
+                        <div class="input-group w-75 m-3">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text">Login</label>
+                            </div>
+                            <input type="text" class="form-control" name="login_" autocomplete="off" id="validationDefault01" required/>
+                        </div>
+                        <div class="input-group w-75 m-3">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text">Password</label>
+                            </div>
+                            <input type="text" class="form-control" name="pass_" autocomplete="off" required/>
+                        </div>
+                        <div class="input-group w-75 m-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text">Virtual Machines:</label>
+                            </div>
+                            <select class="form-select form-select" style="width: 225px" size="10" name="vm_" multiple aria-label="multiple select example" required>
+                              <option selected>all</option>
+                                {% for vm in v_list %}
+                                    <option value={{ vm[0] }}>{{ vm[0] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <p style="font-size: small">Ctrl for multiple selection / option "all" work only for admin account </p>
+                        <div class="input-group w-75 m-3">
+                          <div class="input-group-prepend">
+                            <label class="input-group-text">User type</label>
+                          </div>
+                          <select class="form-select" name="is_admin" required>
+                            <option selected ></option>
+                            <option value="yes">Admin</option>
+                            <option value="no">Not Admin</option>
+                          </select>
+                        </div>
+                        <div>
+                            <p><input type="submit" class="btn btn-success w-50 m-2" value="ADD"/></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="modal fade" id="delete_user">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">CONFIRM USER LOGIN</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div align="center">
+                    <form action="{{ url_for('delete_user') }}" method="post">
+                        <div class="input-group w-75 m-3">
+                            <div class="input-group-prepend">
+                            <label class="input-group-text">login</label>
+                            </div>
+                            <input type="text" class="form-control" name="login_confirm" autocomplete="off" id="validationDefault02" required/>
+                        </div>
+
+                        <div>
+                            <p><input type="submit" class="btn btn-warning w-50 m-2" value="CONFIRM"/></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="modal fade" id="add_vmachine">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                 <div align="center">
+                    <form action="#" method="post">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">
+                            Default checkbox
+                            </label>
+                        </div>
+                        <div>
+                            <p><input type="submit" class="btn btn-success w-50 m-2" value="ADD"/></p>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+
+
+<form action="{{ url_for('users') }}" method="post">
+    <div>
+        <p>
+            <input type="submit" class="btn btn-primary m-1" value="GET USER LIST"/>
+            <button  type="button" class="btn btn-success m-1" data-toggle="modal" data-target="#add_user">ADD USER</button>
+        </p>
+    </div>
+</form>
+    {% endif %}
+{% else %}
+Admin?
+{% endif %}
+
+{% endblock %}

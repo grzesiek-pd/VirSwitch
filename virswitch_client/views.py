@@ -111,6 +111,8 @@ def vmachines():
     msg_back = comm.msg(msg)
     # print(type(msg_back))
     vms_list = comm.admin_check(admin, msg_back, vms)
+    # for line in vms_list:
+    #     print(type(line[5]), line[5])
     return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
 
 
@@ -156,6 +158,19 @@ def users():
     # print(type(msg_back))
     vms_list = comm.admin_check(admin, msg_back, vms)
     return render_template('users.html', u_list=u_list, v_list=vms_list)
+
+
+@app.route('/vm_users', methods=["POST", "GET"])
+def vm_users():
+    msg_id = "get_user_list"
+    msg = [msg_id, '', '', '']
+    u_list = comm.msg(msg)
+    msg_id = "v_list"
+    msg = [msg_id, active_u, '', '']
+    msg_back = comm.msg(msg)
+    # print(type(msg_back))
+    vms_list = comm.admin_check(admin, msg_back, vms)
+    return render_template('vm_users.html', u_list=u_list, v_list=vms_list)
 
 
 @app.route('/add_user', methods=["POST", "GET"])
