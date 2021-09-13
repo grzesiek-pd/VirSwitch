@@ -231,9 +231,18 @@ def reset_logs():
     return render_template('logs.html', logs=logs)
 
 
-@app.route('/console', methods=["POST", "GET"])
-def console():
-    return render_template('console.html')
+@app.route('/vm_details', methods=["POST", "GET"])
+def vm_details():
+    if request.method == "POST":
+        vm = request.args.get('vm')
+        msg_id = "get_vm_details"
+        msg = [msg_id, active_u, vm, '']
+        msg_back = comm.msg(msg)
+        # print(type(msg_back))
+        vm_details = msg_back
+    # vm_details = "xxxxxxxxxxxxxx"
+    return render_template('vm_details.html', vm_details=vm_details)
+    # return render_template('vm_details.html')
 
 
 @app.route('/about')

@@ -76,11 +76,18 @@
                                         </tr>
                                         <tr>
                                             <td>ip: {{ line[5] }}</td>
-                                            <td><button  type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#description">Description</button></td>
+                                            <td>---
+                                                <button  type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#description">Description</button>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>pass: {{ line[6] }}</td>
-                                            <td><a class="button btn-warning btn-sm" href="{{url_for('users')}}">Users</a></td>
+                                            <td>
+                                                <form action="{{ url_for('vm_details',vm=line[0]) }}" method="POST">
+{#                                                <form action="{{ url_for('vm_details') }}" method="POST">#}
+                                                    <input class="button btn-success btn-sm w-100" type="submit" value="EDIT VM">
+                                                </form>
+                                            </td>
                                         </tr>
                                     </table>
                                 </td>
