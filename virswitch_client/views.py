@@ -105,14 +105,24 @@ def vmachines():
     global admin
     global vms
 
+    msg_id = "get_user_list"
+    msg = [msg_id, '', '', '']
+    u_list = comm.msg(msg)
+    print(f'{type(u_list)}--{u_list}')
     host_info = comm.msg(["host_memory", active_u, '', ''])
     msg_id = "v_list"
     msg = [msg_id, active_u, '', '']
     msg_back = comm.msg(msg)
     # print(type(msg_back))
     vms_list = comm.admin_check(admin, msg_back, vms)
-    # for line in vms_list:
-    #     print(type(line[5]), line[5])
+    for line in vms_list:
+        vm_users_list = []
+        for user in u_list:
+            vm_user = user[2].split(",")
+            if line[0] in vm_user:
+                vm_users_list.append(user[0])
+        vm_users = ", ".join(vm_users_list)
+        line.append(vm_users)
     return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
 
 
@@ -243,6 +253,25 @@ def vm_details():
     # vm_details = "xxxxxxxxxxxxxx"
     return render_template('vm_details.html', vm_details=vm_details)
     # return render_template('vm_details.html')
+
+
+@app.route('/update_description', methods=["POST", "GET"])
+def update_description():
+    if request.method == "POST":
+        vm = request.form.get('vmName')
+        vm_ip = request.form.get("vmIp")
+        vm_pass = request.form.get("vmPass")
+
+        msg_id = "update_description"
+        description = {
+            "ip": vm_ip,
+            "pass": vm_pass
+        }
+        msg = [msg_id, active_u, vm, description]
+        msg_back = comm.msg(msg)
+        vms_list = comm.admin_check(admin, msg_back, vms)
+        host_info = comm.msg(["host_memory", active_u, '', ''])
+        return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
 
 
 @app.route('/about')

@@ -3,7 +3,7 @@
 {% block content %}
     {% if admin %}
         {% if v_list %}
-            <meta http-equiv="refresh" content="15; url={{ (url_for('vmachines')) }}"/>
+            <meta http-equiv="refresh" content="10; url={{ (url_for('vmachines')) }}"/>
             <div class="card" style="opacity: 95%">
             <div class="card-header">
                 <table style="width: 100%">
@@ -75,18 +75,23 @@
                                             <th style="width: 10%">{{ line[1] }}</th>
                                         </tr>
                                         <tr>
-                                            <td>ip: {{ line[5] }}</td>
-                                            <td>---
-                                                <button  type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#description">Description</button>
+                                            <td>users: {{ line[7] }}</td>
+                                            <td>
+                                                <form action="{{ url_for('vm_users', vm=line[0]) }}" method="POST" class="input-group">
+                                                    <input class="btn btn-secondary btn-sm w-100" type="submit" value="vm users">
+                                                </form>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>pass: {{ line[6] }}</td>
+                                            <td>ip: {{ line[5] }} (pwd: {{ line[6] }})</td>
+
                                             <td>
-                                                <form action="{{ url_for('vm_details',vm=line[0]) }}" method="POST">
-{#                                                <form action="{{ url_for('vm_details') }}" method="POST">#}
-                                                    <input class="button btn-success btn-sm w-100" type="submit" value="EDIT VM">
-                                                </form>
+                                                <button  type="button" class="btn btn-info btn-sm w-100" data-bs-toggle="modal"
+                                                         data-vm-name="{{ line[0] }}"
+                                                         data-vm-ip="{{ line[5] }}"
+                                                         data-vm-pass="{{ line[6] }}"
+                                                         data-bs-target="#description">description
+                                                </button>
                                             </td>
                                         </tr>
                                     </table>
@@ -192,33 +197,51 @@
                             </tr>
                     {% endfor %}
                     </tbody>
+
                 </table>
             </div>
         </div>
-    <div class="modal fade" id="description">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">CONFIRM USER LOGIN</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div align="center">
-                    <form action="{{ url_for('delete_user') }}" method="post">
-                        <div class="input-group w-75 m-3">
-                            <div class="input-group-prepend">
-                            <label class="input-group-text">login</label>
-                            </div>
-                            <input type="text" class="form-control" name="login_confirm" autocomplete="off" id="validationDefault02" required/>
-                        </div>
+{# modal for update description #}
+        <div class="modal fade" id="description">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">EDIT DESCRIPTION</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div align="center">
+                        <form action="{{ url_for('update_description') }}" method="POST">
 
-                        <div>
-                            <p><input type="submit" class="btn btn-warning w-50 m-2" value="CONFIRM"/></p>
-                        </div>
-                    </form>
+                            <input name="vmName" type="hidden"  class="form-control" placeholder="vmName" autocomplete="off" id="validationDefault02" required/>
+                            <div class="input-group w-75 m-3">
+                                <div class="input-group-prepend w-25">
+                                    <label class="input-group-text ">name</label>
+                                </div>
+                                <input type="text" disabled="disabled" class="form-control" placeholder="vmName" autocomplete="off" id="validationDefault02" required/>
+                            </div>
+
+                            <div class="input-group w-75 m-3">
+                                <div class="input-group-prepend w-25">
+                                <label class="input-group-text">ip</label>
+                                </div>
+                                <input name="vmIp" type="text" class="form-control" placeholder="vmIp" autocomplete="off" id="validationDefault02" required/>
+                            </div>
+
+                            <div class="input-group w-75 m-3">
+                                <div class="input-group-prepend w-25">
+                                <label class="input-group-text">password</label>
+                                </div>
+                                <input name="vmPass" type="text" class="form-control" placeholder="vmPass" autocomplete="off" id="validationDefault02" required/>
+                            </div>
+
+                            <div>
+                                <p><input type="submit" class="btn btn-info w-50 m-2" value="UPDATE"/></p>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
         {% else %}
             <form action="{{ url_for('vmachines') }}" method="post">
