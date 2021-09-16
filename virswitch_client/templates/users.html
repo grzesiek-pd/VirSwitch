@@ -38,7 +38,16 @@
                             <td>{{ user[0] }}</td>
                             <td>{{ user[1] }}</td>
                             <td>{{ user[2] }}</td>
-                            <td width="5%"><button  type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_user">DELETE</button></td>
+                        {% if user[0] == active_u %}
+                            <td width="5%"><button  type="button" disabled="disabled" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_user">DELETE</button></td>
+                        {% else %}
+                            <td width="5%">
+                                <button type="button" class="btn btn-danger btn-sm w-100" data-bs-toggle="modal"
+                                                         data-user-name="{{ user[0] }}"
+                                                         data-bs-target="#delete_user">DELETE
+                                </button>
+                                </td>
+                        {% endif %}
 
                         </tr>
                     </form>
@@ -113,7 +122,8 @@
                             <div class="input-group-prepend">
                             <label class="input-group-text">login</label>
                             </div>
-                            <input type="text" class="form-control" name="login_confirm" autocomplete="off" id="validationDefault02" required/>
+                            <input type="text" disabled=disabled class="form-control" placeholder="username" id="validationDefault02"/>
+                            <input type="hidden" class="form-control" value="username" name="login_confirm" id="validationDefault02"/>
                         </div>
 
                         <div>

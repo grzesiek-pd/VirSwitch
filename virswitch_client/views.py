@@ -167,20 +167,26 @@ def users():
     msg_back = comm.msg(msg)
     # print(type(msg_back))
     vms_list = comm.admin_check(admin, msg_back, vms)
-    return render_template('users.html', u_list=u_list, v_list=vms_list)
+    return render_template('users.html', u_list=u_list, v_list=vms_list, active_u=active_u)
 
 
 @app.route('/vm_users', methods=["POST", "GET"])
 def vm_users():
+    vm_selected = request.args.get('vm')
     msg_id = "get_user_list"
     msg = [msg_id, '', '', '']
     u_list = comm.msg(msg)
-    msg_id = "v_list"
-    msg = [msg_id, active_u, '', '']
-    msg_back = comm.msg(msg)
-    # print(type(msg_back))
-    vms_list = comm.admin_check(admin, msg_back, vms)
-    return render_template('vm_users.html', u_list=u_list, v_list=vms_list)
+
+
+
+    # msg_id = "v_list"
+    # msg = [msg_id, active_u, '', '']
+    # msg_back = comm.msg(msg)
+    # # print(type(msg_back))
+    # vms_list = comm.admin_check(admin, msg_back, vms)
+
+    # return render_template('vm_users.html', u_list=u_list, v_list=vms_list)
+    return render_template('vm_users.html', u_list=u_list, vm=vm_selected)
 
 
 @app.route('/add_user', methods=["POST", "GET"])
@@ -202,6 +208,28 @@ def add_user():
         # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         return render_template('users.html', u_list=u_list, v_list=vms_list)
+
+
+@app.route('/add_vm_user', methods=["POST", "GET"])
+def add_vm_user():
+    if request.method == "POST":
+        vm = request.args.get("vm")
+        login = request.form.get('login_')
+        pas = request.form.get("pass_")
+        password = hashlib.md5(pas.encode()).hexdigest()
+        vms = "-"
+        is_admin = 'no'
+        msg_id = "add_user"
+        msg = [msg_id, login, [password, is_admin, vms], '']
+        # print(msg)
+        u_list = comm.msg(msg)
+        # msg_id = "v_list"
+        # msg = [msg_id, active_u, '', '']
+        # msg_back = comm.msg(msg)
+        # # print(type(msg_back))
+        # vms_list = comm.admin_check(admin, msg_back, vms)
+        # return render_template('vm_users.html', u_list=u_list, v_list=vms_list)
+        return render_template('vm_users.html', u_list=u_list, vm=vm)
 
 
 @app.route('/delete_user', methods=["POST", "GET"])

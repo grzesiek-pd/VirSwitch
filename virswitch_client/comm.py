@@ -13,6 +13,7 @@ def msg(msg_to_send):
 
     pack_to_send = Crypt.encrypt(msg_to_send)
     client_socket.send(pack_to_send)
+
     print(f'-------------------')
     print(f'przygotowana paczka -> {type(msg_to_send)}--{msg_to_send}')
     print(f'zakodowana paczka -> {type(pack_to_send)}--{pack_to_send}')
