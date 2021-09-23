@@ -158,14 +158,11 @@
     {% else %}
 
 
-<form action="{{ url_for('users') }}" method="post">
-    <div>
-        <p>
-            <input type="submit" class="btn btn-primary m-1" value="GET USER LIST"/>
-            <button  type="button" class="btn btn-success m-1" data-toggle="modal" data-target="#add_user">ADD USER</button>
-        </p>
-    </div>
-</form>
+            <form action="{{ url_for('users') }}" method="post">
+                <div>
+                    <button  type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#add_user">ADD USER</button>
+                </div>
+            </form>
     {% endif %}
 {% else %}
 Admin?

@@ -34,7 +34,7 @@
                             <th>VIRTUAL MACHINES:</th>
                             <th style="width: 20%">
                                 <div class="text-center">
-                                    <table>
+                                    <table class="text-center w-100">
                                         <tr>
                                             <h6>(ONLY OFFLINE CHANGES)</h6>
                                         </tr>
@@ -45,14 +45,14 @@
                                     </table>
                                 </div>
                             </th>
-                            <th style="width: 20%">
+                            <th style="width: 14%">
                                 <div class="text-center">
-                                    <table>
+                                    <table class="text-center w-100">
                                         <tr>
                                             <h6>(ONLY ONLINE CHANGES)</h6>
                                         </tr>
                                         <tr>
-                                            <td style="width: 40%">USED CORES</td>
+{#                                            <td style="width: 40%">USED CORES</td>#}
                                             <td>USED MEMORY (MB)</td>
                                         </tr>
                                     </table>
@@ -105,9 +105,10 @@
 
                                         </tr>
                                         <tr>
+
                                             <td>
-                                                <form action="" method="POST" class="input-group">
-                                                    <select name="new_max_memory" class="form-select form-select-sm" aria-label="Select max memory" required>
+                                                <form action="{{ url_for('change_cpus', vm=line[0]) }}" method="POST" class="input-group">
+                                                    <select name="new_cpus" class="form-select form-select-sm" aria-label="Select cpus" required>
                                                         <option selected ></option>
                                                         {% for i in range(1,5) %}
                                                         <option value={{ i }}>{{ i }}</option>
@@ -116,6 +117,7 @@
                                                     <input class="button btn-warning btn-sm" type="submit" value="CHANGE">
                                                 </form>
                                             </td>
+
                                             <td>
                                                 <form action="{{ url_for('change_max_memory', vm=line[0]) }}" method="POST" class="input-group">
                                                     <select name="new_max_memory" class="form-select form-select-sm" aria-label="Select max memory" required>
@@ -127,28 +129,31 @@
                                                     <input class="button btn-warning btn-sm" type="submit" value="CHANGE">
                                                 </form>
                                             </td>
+
                                         </tr>
                                     </table>
                                 </td>
 
-                                <td style="width: 20%"> {# change used cores/memory #}
+                                <td style="width: 14%"> {# change used cores/memory #}
                                     <table class="text-center w-100">
                                         <tr>
-                                            <th style="width: 45%"><h3>{{ line[2] }}</h3></th>
-                                            <th style="width: 55%"><h3>{{ line[4] }}</h3></th>
+{#                                            <th style="width: 45%"><h3>{{ line[2] }}</h3></th>#}
+                                            <th><h3>{{ line[4] }}</h3></th>
                                         </tr>
                                         <tr>
-                                            <td>
-                                                <form action="" method="POST" class="input-group">
-                                                    <select name="new_memory" class="form-select form-select-sm" aria-label="Select memory" required>
-                                                        <option selected ></option>
-                                                        {% for i in range(1,5) %}
-                                                        <option value={{ i }}>{{ i }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                    <input class="button btn-info btn-sm" type="submit" value="CHANGE">
-                                                </form>
-                                            </td>
+
+{#                                            <td>#}
+{#                                                <form action="{{ url_for('change_cpus', vm=line[0]) }}" method="POST" class="input-group">#}
+{#                                                    <select name="new_cpus" class="form-select form-select-sm" aria-label="Select memory" required>#}
+{#                                                        <option selected ></option>#}
+{#                                                        {% for i in range(1,5) %}#}
+{#                                                        <option value={{ i }}>{{ i }}</option>#}
+{#                                                        {% endfor %}#}
+{#                                                    </select>#}
+{#                                                    <input class="button btn-info btn-sm" type="submit" value="CHANGE">#}
+{#                                                </form>#}
+{#                                            </td>#}
+
                                             <td>
                                                 <form action="{{ url_for('change_memory', vm=line[0]) }}" method="POST" class="input-group">
                                                     <select name="new_memory" class="form-select form-select-sm" aria-label="Select memory" required>

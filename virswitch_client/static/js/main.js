@@ -24,10 +24,10 @@ $('#description').on('show.bs.modal', function(e) {
 });
 
 $('#delete_user').on('show.bs.modal', function(e) {
-
     //get data-id attribute of the clicked element
     let username = $(e.relatedTarget).data('user-name');
 
     $(e.currentTarget).find('input[placeholder="username"]').val(username);
     $(e.currentTarget).find('input[value="username"]').val(username);
 });
+

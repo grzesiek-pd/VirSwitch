@@ -3,7 +3,6 @@
 {% block content %}
     {% if admin %}
         {% if u_list %}
-
             <div class="card" style="opacity: 95%">
                 <div class="card-header">
                     <p></p>
@@ -13,8 +12,8 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>VM USERS:</th>
-                        <th>ALL NON-ADMIN-USERS:</th>
+                        <th  class="w-50">VM USERS:</th>
+                        <th  class="w-50">ALL NON-ADMIN-USERS:</th>
                     </tr>
                 </thead>
 
@@ -22,43 +21,55 @@
                     <tr>
                     <td>
                         <table class="table table-bordered">
-{#                          {% for user in vm_users_set %}#}
-                            {% for user in u_list %}
+                            {% for user in vm_users_set %}
                             <tr>
-                                <form action="{{ url_for('users') }}" method="POST">
-                                    <td>{{ user[0] }}</td>
-                                    <td width="10%"><button  type="submit" class="btn btn-warning w-100 btn-sm">==></button></td>
+                                <form action="{{ url_for('remove_user_from_vm') }}" method="POST">
+                                    <td>{{ user }}</td>
+                                    <td style="width: 10%">
+                                        <input type="hidden" name="vm" value="{{ vm }}">
+                                        <input type="hidden" name="user_remove" value="{{ user }}">
+                                        <button  type="submit" class="btn btn-warning w-100 btn-sm">REMOVE</button></td>
                                 </form>
                             </tr>
                             {% endfor %}
                         </table>
-                            <form action="{{ url_for('users') }}" method="POST">
-                                <p style="text-align: center"><button type="submit" class="btn btn-secondary btn-sm w-50">ALL USERS</button></p>
-                            </form>
                     </td>
 
                     <td>
                         <table class="table table-bordered">
-{#                          {% for user in vm_users_list %}#}
-                            {% for user in u_list %}
+                            {% for user in all_users_list %}
                             <tr>
-                                <form action="{{ url_for('add_vm_user',vm=vm) }}" method="POST">
-                                    <td width="10%"><button  type="submit" class="btn btn-primary w-100 btn-sm"><==</button></td>
-                                    <td>{{ user[0] }}</td>
+                                <form action="{{ url_for('add_user_to_vm') }}" method="POST">
+                                    <td style="width: 10%">
+                                        <input type="hidden" name="vm" value="{{ vm }}">
+                                        <input type="hidden" name="user_add" value="{{ user }}">
+                                        <button  type="submit" class="btn btn-primary w-100 btn-sm">ADD</button></td>
+                                    <td>{{ user }}</td>
                                 </form>
                             </tr>
                             {% endfor %}
                         </table>
-                                <form action="{{ url_for('users') }}" method="POST">
-                                    <p style="text-align: center"><button type="button" class="btn btn-success btn-sm w-50" data-bs-toggle="modal" data-bs-target="#add_new_user">ADD NEW USER</button></p>
-                                </form>
                         </td>
                     </tr>
                 </tbody>
             </table>
+        <table class="table table-borderless">
+            <tr>
+                <td class="w-50">
+                    <form action="{{ url_for('users') }}" method="POST">
+                        <p><button type="submit" class="btn btn-secondary btn-sm w-50">ALL USERS</button></p>
+                    </form>
+                </td>
+                <td class="w-50">
+                    <form action="{{ url_for('add_vm_user') }}" method="POST">
+                        <p><button type="button" class="btn btn-success btn-sm w-50" data-bs-toggle="modal" data-bs-target="#add_new_user">ADD NEW USER</button></p>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
         </div>
     </div>
-
 
 <div class="modal fade" id="add_new_user">
         <div class="modal-dialog modal-dialog-centered">
@@ -81,29 +92,7 @@
                             </div>
                             <input type="text" class="form-control" name="pass_" autocomplete="off" required/>
                         </div>
-{#                        <div class="input-group w-75 m-3">#}
-{#                            <div class="input-group-prepend">#}
-{#                                <label class="input-group-text">Virtual Machines:</label>#}
-{#                            </div>#}
-{#                            <select class="form-select form-select" style="width: 225px" size="10" name="vm_" multiple aria-label="multiple select example" required>#}
-{#                              <option selected>all</option>#}
-{#                                {% for vm in v_list %}#}
-{#                                    <option value={{ vm[0] }}>{{ vm[0] }}</option>#}
-{#                                {% endfor %}#}
-{#                            </select>#}
-{#                        </div>#}
-{#                        <p style="font-size: small">Ctrl for multiple selection / option "all" work only for admin account </p>#}
 
-{#                        <div class="input-group w-75 m-3">#}
-{#                          <div class="input-group-prepend">#}
-{#                            <label class="input-group-text">User type</label>#}
-{#                          </div>#}
-{#                            <select class="form-select" name="is_admin" required>#}
-{#                                <option selected ></option>#}
-{#                                <option value="yes">Admin</option>#}
-{#                                <option value="no">Not Admin</option>#}
-{#                            </select>#}
-{#                        </div>#}
                         <div>
                                <input type="hidden" name="is_admin" value="no">
                                <input type="hidden" name="vm_" value="-">
@@ -114,53 +103,8 @@
             </div>
         </div>
     </div>
-{#<div class="modal fade" id="delete_user">#}
-{#        <div class="modal-dialog modal-dialog-centered">#}
-{#            <div class="modal-content">#}
-{#                <div class="modal-header">#}
-{#                  <h5 class="modal-title">CONFIRM USER LOGIN</h5>#}
-{#                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>#}
-{#                </div>#}
-{#                <div align="center">#}
-{#                    <form action="{{ url_for('delete_user') }}" method="post">#}
-{#                        <div class="input-group w-75 m-3">#}
-{#                            <div class="input-group-prepend">#}
-{#                            <label class="input-group-text">login</label>#}
-{#                            </div>#}
-{#                            <input type="text" class="form-control" name="login_confirm" autocomplete="off" id="validationDefault02" required/>#}
-{#                        </div>#}
-{##}
-{#                        <div>#}
-{#                            <p><input type="submit" class="btn btn-warning w-50 m-2" value="CONFIRM"/></p>#}
-{#                        </div>#}
-{#                    </form>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#<div class="modal fade" id="add_vmachine">#}
-{#        <div class="modal-dialog modal-dialog-centered">#}
-{#            <div class="modal-content">#}
-{#                 <div align="center">#}
-{#                    <form action="#" method="post">#}
-{##}
-{#                        <div class="form-check">#}
-{#                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">#}
-{#                            <label class="form-check-label" for="defaultCheck1">#}
-{#                            Default checkbox#}
-{#                            </label>#}
-{#                        </div>#}
-{#                        <div>#}
-{#                            <p><input type="submit" class="btn btn-success w-50 m-2" value="ADD"/></p>#}
-{#                        </div>#}
-{##}
-{#                    </form>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-    {% else %}
 
+    {% else %}
 
 <form action="{{ url_for('users') }}" method="post">
     <div>

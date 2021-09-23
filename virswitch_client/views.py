@@ -69,6 +69,21 @@ def kill_vm():
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
 
 
+@app.route('/change_cpus', methods=["POST", "GET"])
+def change_cpus():
+    if request.method == "POST":
+        vm = request.args.get('vm')
+        new_cpus = request.form.get("new_cpus")
+        msg_id = "new_cpus"
+        msg = [msg_id, active_u, vm, new_cpus]
+        # print(msg)
+        msg_back = comm.msg(msg)
+        # print(type(msg_back))
+        vms_list = comm.admin_check(admin, msg_back, vms)
+        host_info = comm.msg(["host_memory", active_u, '', ''])
+        return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
+
+
 @app.route('/change_memory', methods=["POST", "GET"])
 def change_memory():
     if request.method == "POST":
@@ -108,7 +123,7 @@ def vmachines():
     msg_id = "get_user_list"
     msg = [msg_id, '', '', '']
     u_list = comm.msg(msg)
-    print(f'{type(u_list)}--{u_list}')
+    # print(f'{type(u_list)}--{u_list}')
     host_info = comm.msg(["host_memory", active_u, '', ''])
     msg_id = "v_list"
     msg = [msg_id, active_u, '', '']
@@ -139,7 +154,6 @@ def login():
         password = hashlib.md5(pas.encode()).hexdigest()
         msg = [msg_id, log, pas, password]
         msg_back = comm.msg(msg)
-        # print(msg_back)
         if msg_back[0] == 'password_ok':
             active_u = msg_back[1]
             if msg_back[3] == 'yes':
@@ -147,8 +161,6 @@ def login():
             else:
                 admin = False
             vms = msg_back[4].split(',')
-            # print(msg_back)
-            # print(active_u, admin, vms)
 
             return redirect(url_for('vmachines'))
         elif comm.msg(msg)[0] == 'password_wrong':
@@ -177,7 +189,15 @@ def vm_users():
     msg = [msg_id, '', '', '']
     u_list = comm.msg(msg)
 
+    vm_users_set = set()
+    all_users_list = []
 
+    for user in u_list:
+        if user[1] == 'no':
+            all_users_list.append(user[0])
+        user_vms_list = user[2].split(',')
+        if vm_selected in user_vms_list:
+            vm_users_set.add(user[0])
 
     # msg_id = "v_list"
     # msg = [msg_id, active_u, '', '']
@@ -186,7 +206,31 @@ def vm_users():
     # vms_list = comm.admin_check(admin, msg_back, vms)
 
     # return render_template('vm_users.html', u_list=u_list, v_list=vms_list)
-    return render_template('vm_users.html', u_list=u_list, vm=vm_selected)
+    return render_template('vm_users.html', u_list=u_list, vm=vm_selected, vm_users_set=vm_users_set, all_users_list=all_users_list)
+
+
+@app.route('/add_user_to_vm', methods=["POST", "GET"])
+def add_user_to_vm():
+    vm_selected = request.form.get('vm')
+    vm_user = request.form.get('user_add')
+    # print(vm_user)
+    action = 'add'
+    msg_id = "update_user_vm_list"
+    msg = [msg_id, vm_user, vm_selected, action]
+    u_list = comm.msg(msg)
+    return redirect(f'/vm_users?vm={vm_selected}')
+
+
+@app.route('/remove_user_from_vm', methods=["POST", "GET"])
+def remove_user_from_vm():
+    vm_selected = request.form.get('vm')
+    vm_user = request.form.get('user_remove')
+    # print(vm_user)
+    action = 'remove'
+    msg_id = "update_user_vm_list"
+    msg = [msg_id, vm_user, vm_selected, action]
+    u_list = comm.msg(msg)
+    return redirect(f'/vm_users?vm={vm_selected}')
 
 
 @app.route('/add_user', methods=["POST", "GET"])
@@ -198,6 +242,14 @@ def add_user():
         vm_list = request.form.getlist("vm_")
         vms = ",".join(vm_list)
         is_admin = request.form.get("is_admin")
+
+        msg_id = "get_user_list"
+        msg = [msg_id, '', '', '']
+        u_list = comm.msg(msg)
+        for user in u_list:
+            if login == user[0]:
+                return render_template('user_exists.html', login=login)
+
         msg_id = "add_user"
         msg = [msg_id, login, [password, is_admin, vms], '']
         # print(msg)
@@ -219,17 +271,18 @@ def add_vm_user():
         password = hashlib.md5(pas.encode()).hexdigest()
         vms = "-"
         is_admin = 'no'
+
+        msg_id = "get_user_list"
+        msg = [msg_id, '', '', '']
+        u_list = comm.msg(msg)
+        for user in u_list:
+            if login == user[0]:
+                return render_template('user_exists.html', login=login)
+
         msg_id = "add_user"
         msg = [msg_id, login, [password, is_admin, vms], '']
-        # print(msg)
         u_list = comm.msg(msg)
-        # msg_id = "v_list"
-        # msg = [msg_id, active_u, '', '']
-        # msg_back = comm.msg(msg)
-        # # print(type(msg_back))
-        # vms_list = comm.admin_check(admin, msg_back, vms)
-        # return render_template('vm_users.html', u_list=u_list, v_list=vms_list)
-        return render_template('vm_users.html', u_list=u_list, vm=vm)
+        return redirect(f'/vm_users?vm={vm}')
 
 
 @app.route('/delete_user', methods=["POST", "GET"])
@@ -269,20 +322,6 @@ def reset_logs():
     return render_template('logs.html', logs=logs)
 
 
-@app.route('/vm_details', methods=["POST", "GET"])
-def vm_details():
-    if request.method == "POST":
-        vm = request.args.get('vm')
-        msg_id = "get_vm_details"
-        msg = [msg_id, active_u, vm, '']
-        msg_back = comm.msg(msg)
-        # print(type(msg_back))
-        vm_details = msg_back
-    # vm_details = "xxxxxxxxxxxxxx"
-    return render_template('vm_details.html', vm_details=vm_details)
-    # return render_template('vm_details.html')
-
-
 @app.route('/update_description', methods=["POST", "GET"])
 def update_description():
     if request.method == "POST":
@@ -297,9 +336,11 @@ def update_description():
         }
         msg = [msg_id, active_u, vm, description]
         msg_back = comm.msg(msg)
+
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
-        return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
+        # return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
+        return redirect('/vmachines')
 
 
 @app.route('/about')
