@@ -303,13 +303,18 @@ def delete_user():
 
 @app.route('/logs', methods=["POST", "GET"])
 def logs():
-
     msg_id = "get_logs"
-    msg = [msg_id, '', '', '']
+    current_page = int(request.args.get('page'))
+    print(f'page: {current_page}')
+    msg = [msg_id, '', current_page, '']
     msg_back = comm.msg(msg)
     # print(type(msg_back))
-    logs = msg_back
-    return render_template('logs.html', logs=logs)
+    logs_pack = msg_back
+    prev = logs_pack.get('prev')
+    next = logs_pack.get('next')
+    current_page = logs_pack.get('current')
+    logs = logs_pack.get('log_pack')
+    return render_template('logs.html', logs=logs, current_page=current_page, prev=prev, next=next)
 
 
 @app.route('/reset_logs', methods=["POST", "GET"])
