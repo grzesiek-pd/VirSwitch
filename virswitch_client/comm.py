@@ -1,13 +1,31 @@
 from virswitch_client import app
 import socket as sock
+import os
 
 from virswitch_client.encrypt import Crypt
 
 
+def read_ip():
+    try:
+        # rel_path = "virswitch_client/ip_config.txt"
+        # script_dir = os.path.dirname(__file__)
+        # file_path = os.path.join(script_dir, rel_path)
+        # print(file_path)
+        # f = open('ip_config.txt', 'a+', encoding='utf-8')
+        f = open('./ip_config.txt', 'r', encoding='utf-8')
+        # f = open(f'{file_path}', 'r', encoding='utf-8')
+        ip = f.readline()
+        return ip
+    except IOError as err:
+        print('No ip_config file!')
+        print(f'Error: {err}')
+
+
 @app.route('/msg')
 def msg(msg_to_send):
+    host = read_ip()
+    # host = '192.168.0.77'
     # host = '192.168.122.11'
-    host = '192.168.0.77'
     # host = '192.168.81.131'
     # host = '127.0.0.1'
     port = 3333
