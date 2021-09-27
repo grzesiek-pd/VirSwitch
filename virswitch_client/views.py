@@ -10,7 +10,17 @@ vms = []
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    ip = comm.read_ip()
+    print(f'ip = {ip}')
+    if ip == 'wrong_ip':
+        return render_template('bad_config.html')
+    else:
+        return render_template('index.html')
+
+
+@app.route('/bad_config', methods=["POST", "GET"])
+def bad_config():
+    return render_template('bad_config.html')
 
 
 @app.route('/start_vm', methods=["POST", "GET"])
@@ -146,6 +156,8 @@ def login():
     global active_u
     global admin
     global vms
+
+    # if request.method == "GET":
 
     if request.method == "POST":
         msg_id = "user_check"

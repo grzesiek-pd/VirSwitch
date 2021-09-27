@@ -1,29 +1,65 @@
+from flask import redirect
 from virswitch_client import app
 import socket as sock
 import os
+import re
 
 from virswitch_client.encrypt import Crypt
 
 
 def read_ip():
+    ip = []
     try:
-        # rel_path = "virswitch_client/ip_config.txt"
-        # script_dir = os.path.dirname(__file__)
-        # file_path = os.path.join(script_dir, rel_path)
-        # print(file_path)
-        # f = open('ip_config.txt', 'a+', encoding='utf-8')
-        f = open('./ip_config.txt', 'r', encoding='utf-8')
-        # f = open(f'{file_path}', 'r', encoding='utf-8')
-        ip = f.readline()
-        return ip
-    except IOError as err:
-        print('No ip_config file!')
-        print(f'Error: {err}')
+        f = open('ip_config.txt', 'r', encoding='utf-8')
+        o = f.read()
+        ip = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", o)
+    except FileNotFoundError:
+        print(f'file ip_config.txt not found!')
+        f_create = open('ip_config.txt', 'w+', encoding='utf-8')
+        f_create.write('your_server_ip_here')
+
+    if len(ip) == 1:
+        host = ip[0]
+        print(f'host = ({type(host)})<>{host}<>')
+    else:
+        print(f'wrong ip address')
+        host = 'wrong_ip'
+
+    try:
+        port = 3333
+        s = sock.socket(sock.AF_INET, sock.SOCK_STREAM)
+        s.settimeout(1)
+        result = s.connect_ex((host, port))
+        if result == 0:
+            print(f'Connect {host} / {port}')
+        else:
+            host = 'wrong_ip'
+            print(f'No connect to {host} / {port}')
+    except:
+        pass
+    return host
+
+    # try:
+    #     # rel_path = "virswitch_client/ip_config.txt"
+    #     # script_dir = os.path.dirname(__file__)
+    #     # file_path = os.path.join(script_dir, rel_path)
+    #     # print(file_path)
+    #     # f = open('ip_config.txt', 'a+', encoding='utf-8')
+    #     f = open('ip_config.txt', 'r', encoding='utf-8')
+    #     # f = open(f'{file_path}', 'r', encoding='utf-8')
+    #     ip = f.readline()
+    #     print(f'ip =  {ip}')
+    #     return ip
+    # except IOError as err:
+    #     print('No ip_config file!')
+    #     print(f'Error: {err}')
 
 
 @app.route('/msg')
 def msg(msg_to_send):
     host = read_ip()
+
+    print(f'host = {host}')
     # host = '192.168.0.77'
     # host = '192.168.122.11'
     # host = '192.168.81.131'
@@ -51,37 +87,9 @@ def msg(msg_to_send):
     if msg_get_back == 'error':
         print('error!')
 
-    elif msg_get_back in range(32000):
-        parts = msg_get_back
-        print('parts =', msg_get_back)
-        msg_str = ''
-
-        part = client_socket.recv(32000).decode("utf-8")
-        # for i in range(parts + 1):
-        msg_str = msg_str.join(part)
-        print(f'part -> ', part)
-        print('all --> ', msg_str)
-        # msg = eval(msg_str)
-        # print('all eval --> ', msg)
-
-        msg = ['string too long!!!\n', 'string too long!!!\n', 'string too long!!!\n']
-
-        # data = []
-        # while True:
-        #     part = client_socket.recv(16000)
-        #     if not part:
-        #         break
-        #     data.append(part)
-        # data_arr = pickle.loads(b"".join(data))
-        # print(type(data_arr), data_arr)
-        # msg = data_arr.decode()
-        # print(type(msg), msg)
-
-        print('long msg ->', msg)
-        return msg
     else:
-        # print('short msg ->', msg_get_back)
         return msg_get_back
+
 
 
 @app.route('/admin_check')
