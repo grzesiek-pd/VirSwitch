@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, session
 from virswitch_client import app, comm
 import hashlib
 
@@ -16,6 +16,41 @@ def index():
         return render_template('bad_config.html')
     else:
         return render_template('index.html')
+
+
+@app.route('/login', methods=["POST", "GET"])
+def login():
+    global active_u
+    global admin
+    global vms
+
+    if request.method == "POST":
+        msg_id = "user_check"
+        log = request.form["login_"]
+        pas = request.form["pass_"]
+        password = hashlib.md5(pas.encode()).hexdigest()
+        msg = [msg_id, log, pas, password]
+        msg_back = comm.msg(msg)
+        if msg_back[0] == 'password_ok':
+            session['username'] = msg_back[1]
+            active_u = session['username']
+            if msg_back[3] == 'yes':
+                admin = True
+            else:
+                admin = False
+            vms = msg_back[4].split(',')
+
+            return redirect(url_for('vmachines'))
+        elif comm.msg(msg)[0] == 'password_wrong':
+            return render_template("index.html")
+    else:
+        return render_template("login.html")
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
 
 @app.route('/bad_config', methods=["POST", "GET"])
@@ -133,34 +168,6 @@ def vmachines():
         vm_users = ", ".join(vm_users_list)
         line.append(vm_users)
     return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
-
-
-@app.route('/login', methods=["POST", "GET"])
-def login():
-    global active_u
-    global admin
-    global vms
-
-    if request.method == "POST":
-        msg_id = "user_check"
-        log = request.form["login_"]
-        pas = request.form["pass_"]
-        password = hashlib.md5(pas.encode()).hexdigest()
-        msg = [msg_id, log, pas, password]
-        msg_back = comm.msg(msg)
-        if msg_back[0] == 'password_ok':
-            active_u = msg_back[1]
-            if msg_back[3] == 'yes':
-                admin = True
-            else:
-                admin = False
-            vms = msg_back[4].split(',')
-
-            return redirect(url_for('vmachines'))
-        elif comm.msg(msg)[0] == 'password_wrong':
-            return render_template("index.html")
-    else:
-        return render_template("login.html")
 
 
 @app.route('/users', methods=["POST", "GET"])
@@ -283,8 +290,10 @@ def delete_user():
 @app.route('/logs', methods=["POST", "GET"])
 def logs():
     msg_id = "get_logs"
-    current_page = int(request.args.get('page'))
-    print(f'page: {current_page}')
+    try:
+        current_page = int(request.args.get('page'))
+    except TypeError:
+        current_page = 1
     msg = [msg_id, '', current_page, '']
     msg_back = comm.msg(msg)
     logs_pack = msg_back
@@ -298,6 +307,10 @@ def logs():
 @app.route('/reset_logs', methods=["POST", "GET"])
 def reset_logs():
     msg_id = "reset_logs"
+    active_u = '+++'
+    print(active_u)
+    active_u = session['username']
+    print(active_u)
     msg = [msg_id, active_u, '', '']
     msg_back = comm.msg(msg)
     logs = msg_back
@@ -320,7 +333,6 @@ def update_description():
         msg_back = comm.msg(msg)
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
-        # return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
         return redirect('/vmachines')
 
 

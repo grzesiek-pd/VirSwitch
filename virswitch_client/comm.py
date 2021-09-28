@@ -17,7 +17,6 @@ def read_ip():
 
     if len(ip) == 1:
         host = ip[0]
-        print(f'host = ({type(host)})<>{host}<>')
     else:
         print(f'wrong ip address')
         host = 'wrong_ip'
