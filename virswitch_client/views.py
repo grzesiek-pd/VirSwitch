@@ -27,11 +27,9 @@ def bad_config():
 def start_vm():
     if request.method == "POST":
         vm = request.args.get('vm')
-        # print(vm)
         msg_id = "start"
         msg = [msg_id, active_u, vm, '']
         msg_back = comm.msg(msg)
-        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -41,11 +39,9 @@ def start_vm():
 def stop_vm():
     if request.method == "POST":
         vm = request.args.get('vm')
-        # print(vm)
         msg_id = "stop"
         msg = [msg_id, active_u, vm, '']
         msg_back = comm.msg(msg)
-        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -55,11 +51,9 @@ def stop_vm():
 def restart_vm():
     if request.method == "POST":
         vm = request.args.get('vm')
-        # print(vm)
         msg_id = "restart"
         msg = [msg_id, active_u, vm, '']
         msg_back = comm.msg(msg)
-        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -69,11 +63,9 @@ def restart_vm():
 def kill_vm():
     if request.method == "POST":
         vm = request.args.get('vm')
-        # print(vm)
         msg_id = "kill"
         msg = [msg_id, active_u, vm, '']
         msg_back = comm.msg(msg)
-        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -86,9 +78,7 @@ def change_cpus():
         new_cpus = request.form.get("new_cpus")
         msg_id = "new_cpus"
         msg = [msg_id, active_u, vm, new_cpus]
-        # print(msg)
         msg_back = comm.msg(msg)
-        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -101,9 +91,7 @@ def change_memory():
         new_memory = request.form.get("new_memory")
         msg_id = "new_memory"
         msg = [msg_id, active_u, vm, new_memory]
-        # print(msg)
         msg_back = comm.msg(msg)
-        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -116,9 +104,7 @@ def change_max_memory():
         new_max_memory = request.form.get("new_max_memory")
         msg_id = "new_max_memory"
         msg = [msg_id, active_u, vm, new_max_memory]
-        # print(msg)
         msg_back = comm.msg(msg)
-        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
@@ -133,12 +119,10 @@ def vmachines():
     msg_id = "get_user_list"
     msg = [msg_id, '', '', '']
     u_list = comm.msg(msg)
-    # print(f'{type(u_list)}--{u_list}')
     host_info = comm.msg(["host_memory", active_u, '', ''])
     msg_id = "v_list"
     msg = [msg_id, active_u, '', '']
     msg_back = comm.msg(msg)
-    # print(type(msg_back))
     vms_list = comm.admin_check(admin, msg_back, vms)
     for line in vms_list:
         vm_users_list = []
@@ -156,8 +140,6 @@ def login():
     global active_u
     global admin
     global vms
-
-    # if request.method == "GET":
 
     if request.method == "POST":
         msg_id = "user_check"
@@ -189,7 +171,6 @@ def users():
     msg_id = "v_list"
     msg = [msg_id, active_u, '', '']
     msg_back = comm.msg(msg)
-    # print(type(msg_back))
     vms_list = comm.admin_check(admin, msg_back, vms)
     return render_template('users.html', u_list=u_list, v_list=vms_list, active_u=active_u)
 
@@ -210,14 +191,6 @@ def vm_users():
         user_vms_list = user[2].split(',')
         if vm_selected in user_vms_list:
             vm_users_set.add(user[0])
-
-    # msg_id = "v_list"
-    # msg = [msg_id, active_u, '', '']
-    # msg_back = comm.msg(msg)
-    # # print(type(msg_back))
-    # vms_list = comm.admin_check(admin, msg_back, vms)
-
-    # return render_template('vm_users.html', u_list=u_list, v_list=vms_list)
     return render_template('vm_users.html', u_list=u_list, vm=vm_selected, vm_users_set=vm_users_set, all_users_list=all_users_list)
 
 
@@ -225,7 +198,6 @@ def vm_users():
 def add_user_to_vm():
     vm_selected = request.form.get('vm')
     vm_user = request.form.get('user_add')
-    # print(vm_user)
     action = 'add'
     msg_id = "update_user_vm_list"
     msg = [msg_id, vm_user, vm_selected, action]
@@ -237,7 +209,6 @@ def add_user_to_vm():
 def remove_user_from_vm():
     vm_selected = request.form.get('vm')
     vm_user = request.form.get('user_remove')
-    # print(vm_user)
     action = 'remove'
     msg_id = "update_user_vm_list"
     msg = [msg_id, vm_user, vm_selected, action]
@@ -264,12 +235,10 @@ def add_user():
 
         msg_id = "add_user"
         msg = [msg_id, login, [password, is_admin, vms], '']
-        # print(msg)
         u_list = comm.msg(msg)
         msg_id = "v_list"
         msg = [msg_id, active_u, '', '']
         msg_back = comm.msg(msg)
-        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         return render_template('users.html', u_list=u_list, v_list=vms_list)
 
@@ -303,12 +272,10 @@ def delete_user():
         login = request.form.get('login_confirm')
         msg_id = "delete_user"
         msg = [msg_id, login, '', '']
-        # print(msg)
         u_list = comm.msg(msg)
         msg_id = "v_list"
         msg = [msg_id, active_u, '', '']
         msg_back = comm.msg(msg)
-        # print(type(msg_back))
         vms_list = comm.admin_check(admin, msg_back, vms)
         return render_template('users.html', u_list=u_list, v_list=vms_list)
 
@@ -320,7 +287,6 @@ def logs():
     print(f'page: {current_page}')
     msg = [msg_id, '', current_page, '']
     msg_back = comm.msg(msg)
-    # print(type(msg_back))
     logs_pack = msg_back
     prev = logs_pack.get('prev')
     next = logs_pack.get('next')
@@ -334,7 +300,6 @@ def reset_logs():
     msg_id = "reset_logs"
     msg = [msg_id, active_u, '', '']
     msg_back = comm.msg(msg)
-    # print(type(msg_back))
     logs = msg_back
     return render_template('logs.html', logs=logs)
 
@@ -353,7 +318,6 @@ def update_description():
         }
         msg = [msg_id, active_u, vm, description]
         msg_back = comm.msg(msg)
-
         vms_list = comm.admin_check(admin, msg_back, vms)
         host_info = comm.msg(["host_memory", active_u, '', ''])
         # return render_template('vmachines.html', v_list=vms_list, host_info=host_info, active_u=active_u)
