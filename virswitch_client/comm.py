@@ -1,8 +1,7 @@
 from virswitch_client import app
+from virswitch_client.encrypt import Crypt
 import socket as sock
 import re
-
-from virswitch_client.encrypt import Crypt
 
 
 def read_ip():
