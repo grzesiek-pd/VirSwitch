@@ -1,14 +1,12 @@
 {% extends "base.html" %}
 {% block title %}VMachines{% endblock %}
 {% block content %}
-
-<meta http-equiv="refresh" content="3; url={{ (url_for('users')) }}"/>
-
-<div class="container w-75">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h3>Sorry, user {{ login }} already exists </h3>
-                </div>
+    <meta http-equiv="refresh" content="5; url={{ (url_for('users')) }}"/>
+    <div class="container w-75">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>Sorry, user {{ login }} already exists </h3>
             </div>
-</div>
+        </div>
+    </div>
 {% endblock %}

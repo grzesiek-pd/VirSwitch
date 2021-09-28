@@ -16,7 +16,6 @@
                         <th  class="w-50">ALL NON-ADMIN-USERS:</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     <tr>
                     <td>
@@ -24,17 +23,19 @@
                             {% for user in vm_users_set %}
                             <tr>
                                 <form action="{{ url_for('remove_user_from_vm') }}" method="POST">
-                                    <td>{{ user }}</td>
+                                    <td>
+                                        {{ user }}
+                                    </td>
                                     <td style="width: 10%">
                                         <input type="hidden" name="vm" value="{{ vm }}">
                                         <input type="hidden" name="user_remove" value="{{ user }}">
-                                        <button  type="submit" class="btn btn-warning w-100 btn-sm">REMOVE</button></td>
+                                        <button  type="submit" class="btn btn-warning w-100 btn-sm">REMOVE</button>
+                                    </td>
                                 </form>
                             </tr>
                             {% endfor %}
                         </table>
                     </td>
-
                     <td>
                         <table class="table table-bordered">
                             {% for user in all_users_list %}
@@ -67,11 +68,10 @@
                 </td>
             </tr>
         </table>
-
         </div>
     </div>
-
-<div class="modal fade" id="add_new_user">
+    {# modal for add user to vm #}
+    <div class="modal fade" id="add_new_user">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -92,7 +92,6 @@
                             </div>
                             <input type="text" class="form-control" name="pass_" autocomplete="off" required/>
                         </div>
-
                         <div>
                                <input type="hidden" name="is_admin" value="no">
                                <input type="hidden" name="vm_" value="-">
@@ -103,9 +102,7 @@
             </div>
         </div>
     </div>
-
     {% else %}
-
 <form action="{{ url_for('users') }}" method="post">
     <div>
         <p>

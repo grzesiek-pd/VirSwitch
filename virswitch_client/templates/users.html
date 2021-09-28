@@ -5,13 +5,9 @@
         {% if u_list %}
             <form action="{{ url_for('users') }}" method="post">
                 <div>
-
-
-                        <button  type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#add_user">ADD USER</button>
-
+                    <button  type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#add_user">ADD USER</button>
                 </div>
             </form>
-
             <div class="card" style="opacity: 95%">
         <div class="card-header">
             <strong class="card-title">USERS:</strong>
@@ -26,7 +22,6 @@
                         <th></th>
                     </tr>
                 </thead>
-
                 <tbody>
                 {% for user in u_list %}
                     <form action="{{ url_for('users') }}" method="POST">
@@ -43,12 +38,10 @@
                         {% else %}
                             <td width="5%">
                                 <button type="button" class="btn btn-danger btn-sm w-100" data-bs-toggle="modal"
-                                                         data-user-name="{{ user[0] }}"
-                                                         data-bs-target="#delete_user">DELETE
+                                        data-user-name="{{ user[0] }}" data-bs-target="#delete_user">DELETE
                                 </button>
                                 </td>
                         {% endif %}
-
                         </tr>
                     </form>
                 {% endfor %}
@@ -56,9 +49,8 @@
             </table>
         </div>
     </div>
-
-
-<div class="modal fade" id="add_user">
+    {# modal for add user #}
+    <div class="modal fade" id="add_user">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -109,7 +101,8 @@
             </div>
         </div>
     </div>
-<div class="modal fade" id="delete_user">
+    {# modal for delete user #}
+    <div class="modal fade" id="delete_user">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -125,7 +118,6 @@
                             <input type="text" disabled=disabled class="form-control" placeholder="username" id="validationDefault02"/>
                             <input type="hidden" class="form-control" value="username" name="login_confirm" id="validationDefault02"/>
                         </div>
-
                         <div>
                             <p><input type="submit" class="btn btn-danger w-50 m-2" value="DELETE"/></p>
                         </div>
@@ -134,12 +126,11 @@
             </div>
         </div>
     </div>
-<div class="modal fade" id="add_vmachine">
+    <div class="modal fade" id="add_vmachine">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                  <div align="center">
                     <form action="#" method="post">
-
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
                             <label class="form-check-label" for="defaultCheck1">
@@ -149,20 +140,17 @@
                         <div>
                             <p><input type="submit" class="btn btn-success w-50 m-2" value="ADD"/></p>
                         </div>
-
                     </form>
                 </div>
             </div>
         </div>
     </div>
     {% else %}
-
-
-            <form action="{{ url_for('users') }}" method="post">
-                <div>
-                    <button  type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#add_user">ADD USER</button>
-                </div>
-            </form>
+    <form action="{{ url_for('users') }}" method="post">
+        <div>
+            <button  type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#add_user">ADD USER</button>
+        </div>
+    </form>
     {% endif %}
 {% else %}
 Admin?
